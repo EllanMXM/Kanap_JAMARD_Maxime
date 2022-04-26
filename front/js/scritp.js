@@ -44,6 +44,8 @@ fetch("http://localhost:3000/api/products")
       Créer les différents élément HTML permettant l'affichage d'un canapé
       Se référer au template index.html 
       */
+        productlink.href = "./product.html?id=" + product["_id"];
+
         console.log(product);
       })
       .catch((error) => {
