@@ -1,20 +1,7 @@
-/*fetch("http://localhost:3000/api/products")
-  .then((response) => response.json())
-  //traitement de la réponse
-  //verifier que la requête renvoi le resultat attendu
-  //créer une erreur dans le cas contraire
-
-  .then(
-    (responseData) => console.log(response2)
-    //traiter les données de la réponse
-  )
-
-  .catch((error) => {
-    //gestion des erreurs
-  });*/
 fetch("http://localhost:3000/api/products")
   .then((response) => response.json())
   .then((data) =>
+    //traiter les données de la réponse
     data
       .forEach((product) => {
         //let data = document.createElement;
@@ -50,6 +37,7 @@ fetch("http://localhost:3000/api/products")
       })
       .catch((error) => {
         console.log(error);
+        //créer une erreur dans le cas contraire
         //gestion de l'erreur
       })
   );
