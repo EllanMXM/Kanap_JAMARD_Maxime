@@ -17,6 +17,7 @@ fetch("http://localhost:3000/api/products/" + idProduct).then((response) =>
     img.src = data.imageUrl;
     img.alt = data.altTxt;
 
+    //Ajout des élements des produits
     let title = document.getElementById("title");
     title.textContent = data.name;
 
@@ -26,11 +27,13 @@ fetch("http://localhost:3000/api/products/" + idProduct).then((response) =>
     let description = document.getElementById("description");
     description.textContent = data.description;
 
-    let option = document.createElement("option");
-    option.value = data.colors;
-    option.textContent = data.colors;
-    colors.appendChild(option);
+    //Ajout des couleurs
 
+    for (let color of data.colors) {
+      let Option = document.createElement("option");
+      document.getElementById("colors").appendChild(Option);
+      Option.textContent = color;
+    }
     console.log(data);
   })
 );
