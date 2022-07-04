@@ -1,137 +1,112 @@
-//Récupération de l'id via les paramètres de l'url
-//const idProduct = new URL(window.location.href).searchParams.get("id");
-
-//fetch("http://localhost:3000/api/products" + idProduct)
-// .then((response) => response.json())
-// .then((response) => {});
-
 //allez chercher les paramètre dans l'url
 let urlparam = new URLSearchParams(window.location.search);
 let idProduct = urlparam.get("id");
 
 //APPEL API POUR UN SEUL PRODUIT (idProduct)
-fetch("http://localhost:3000/api/products/" + idProduct).then((response) =>
-  response.json().then((data) => {
-    let img = document.createElement("img");
-    document.querySelector(".item__img").appendChild(img);
-    img.src = data.imageUrl;
-    img.alt = data.altTxt;
+fetch("http://localhost:3000/api/products/" + idProduct)
+.then((response) => {
+  if (response.ok) {
+    return response.json();
+  }
 
-    //Ajout des élements des produits
-    let title = document.getElementById("title");
-    title.textContent = data.name;
+  throw new Error('Réponse inattendue du serveur');
+})
+.then(data => {
+  let img = document.createElement("img");
+  document.querySelector(".item__img").appendChild(img);
+  img.src = data.imageUrl;
+  img.alt = data.altTxt;
 
-    let price = document.getElementById("price");
-    price.textContent = data.price;
+  //Ajout des élements des produits
+  let title = document.getElementById("title");
+  title.textContent = data.name;
 
-    let description = document.getElementById("description");
-    description.textContent = data.description;
+  let price = document.getElementById("price");
+  price.textContent = data.price;
 
-    //Ajout des couleurs
+  let description = document.getElementById("description");
+  description.textContent = data.description;
 
-    for (let color of data.colors) {
-      let optionTag = document.createElement("option");
-      document.getElementById("colors").appendChild(optionTag);
-      optionTag.textContent = color;
-      optionTag.value = color;
-    }
-    console.log(data);
+  //Ajout des couleurs
+  for (let color of data.colors) {
+    let optionTag = document.createElement("option");
+    document.getElementById("colors").appendChild(optionTag);
+    optionTag.textContent = color;
+    optionTag.value = color;
+  }
+  console.log(data);
 
-    const addToCartButton = document.getElementById("addToCart");
-    addToCartButton.addEventListener("click", (event) => {
-      const selectQuantity = document.getElementById("quantity");
-      const selectColors = document.getElementById("colors");
+  const addToCartButton = document.getElementById("addToCart");
+  addToCartButton.addEventListener("click", (event) => {
+    const selectQuantity = document.getElementById("quantity");
+    const selectColors = document.getElementById("colors");
+    
+    //Recupération du choix de la couleur
+    let choixCouleur = selectColors.value;
+              
+    //Recupération du choix de la quantité
+    let choixQuantite = selectQuantity.value;  
 
-      if (
-        selectQuantity.value >= 1 &&
-        selectQuantity.value <= 100 &&
-        selectColors != ""
-      ) {
-        let choiceColors = selectColors.value;
-        let choiceQuantity = selectQuantity.value;
+        
+    if (choixCouleur == "") {
+      alert("Veuillez sélectionner une couleur.");
+      return;
+    } else if (choixQuantite <= 0 || choixQuantite >= 100) {
+      alert("Nombre d'articles incorrect.");
+      return;
+    } 
+    else {
+      let addedArticle = {
+        id: idProduct,
+        color: selectColors.value,
+        quantity: selectQuantity.value,
+      };
 
-        const addArticle = {
-          id: idProduct,
-          image: data.imageUrl,
-          alt: data.imageAlt,
-          name: title.textContent,
-          price: price.textContent,
-          color: selectColors.value,
-          quantity: selectQuantity.value,
-        };
-
-        // RECUPERER UN TABLEAU DU LOCALSTORAGE
-        let productLocalStorage = JSON.parse(localStorage.getItem("product"));
-
-        // j'ajoute les produits sélectionnés dans le localStorage
-        const addProductLocalStorage = () => {
-          productLocalStorage.push(addArticle);
-
-          // je stocke les données récupérées dans le localStorage :
-          localStorage.setItem("product", JSON.stringify(productLocalStorage));
-        };
-
-        let addConfirm = () => {
-          alert("Le produit a bien été ajouté au panier");
-        };
-
-        let update = false;
-
-        // s'il y a des produits enregistrés dans le localStorage
-        if (productLocalStorage) {
-          // verifier que le produit ne soit pas deja dans le localstorage/panier
-          // avec la couleur
-          productLocalStorage.forEach(function (productCheck, key) {
-            if (
-              productCheck.id == idProduct &&
-              productCheck.color == selectColors.value
-            ) {
-              productLocalStorage[key].quantity =
-                parseInt(productCheck.quantity) +
-                parseInt(selectQuantity.value);
-              localStorage.setItem(
-                "product",
-                JSON.stringify(productLocalStorage)
-              );
-              update = true;
-              addConfirm();
-            }
-          });
-
-          if (!update) {
-            addProductLocalStorage();
-            addConfirm();
-          }
+      let cart = getCart();
+      const productKey = idProduct + selectColors.value;
+     
+ /*
+      let exampleArray = ['poijfzepoiefzj', 'pojfepoezfj,', 45];console.log(exampleArray[2]);
+      let exampleObject = {
+        name:'nom',
+        quantity: 4
+      }; 
+      let targetKey = 'name';
+      exampleObject.name == exampleObject['name'] == exampleObject[targetKey]
+      {
+        'idproduit plus sa couleur' : {
+          id: 'azdjhdamzdojhia',
+          quantity: 30,
+          color: 'Red'
         }
-
-        // s'il n'y a aucun produit enregistré dans le localStorage
-        else {
-          // je crée alors un tableau avec les éléments choisi par l'utilisateur
-          productLocalStorage = [];
-          addProductLocalStorage();
-          addConfirm();
-        }
-      } else {
-        alert("Veuillez selectionner une couleur et une quantité");
       }
-    });
-  })
-);
+      exampleObject['name'] = 'toto';
+*/
+      if (cart.hasOwnProperty(productKey)) { // Ici la clé existe, donc on modifie la quantité
+        // cart[productKey].quantity = nouvelleQuantité (addition de la quantité enregistrée avec la nouvelle quantité saisie)
+        // Attention, la quantité totale ne doit pas dépasser 100
+ 
+        let newQuantity = parseInt(addedArticle.quantity) + parseInt(cart[productKey].quantity);
 
-//ici on code l'action au moment de l'évènement
-//récupérer la quantité
-//recuperer la couleur
+        //if (newQuantity > 0 || newQuantity <= 100)
+        if (newQuantity > 0 && newQuantity <= 100) {
+          cart[productKey].quantity = newQuantity;
+          
+          localStorage.setItem("cart", JSON.stringify(cart));
+        } else {
+          alert("Nombre maximum d'article dépassé")
+          //gérer message d'erreur, nombre maximum dépassé
+        }
+      } else { // la clé n'existe pas donc on ajoute le produit au panier
+          //La quantité est validée plus haut, pas besoin de faire un nouveau test dans le cas d'un nouveau produit
+          cart[productKey] = addedArticle;
+          localStorage.setItem('cart', JSON.stringify(cart));
+      }
+  }})
+})
 
-/*
-      controller les erreurs
-        - Verifier qu'une quantité est saisie
-        - Verifier qu'une couleur est sélectionnée
-      */
-/*
-      Si pas d'erreur
-        ajouter au panier
-      */
-/*
-      Si erreur 
-      Afficher message d'erreur (couleur ou quantité ou les deux)
-      */
+.catch(error => {
+  // traiter l'erreur
+  console.log(error);
+});
+
