@@ -80,10 +80,10 @@ for (let productKey in productLocalStorage) {
     productItemContentSettingsQuantity.appendChild(productQuantity);
     productQuantity.className = "itemQuantity";
     productQuantity.value = product.quantity;
-    productQuantity.setAttribute("type", "number");
-    productQuantity.setAttribute("min", "1");
-    productQuantity.setAttribute("max", "100");
-    productQuantity.setAttribute("name", "itemQuantity");
+    productQuantity.type = ("number");
+    productQuantity.min = 1;
+    productQuantity.max = 100;
+    productQuantity.name = ("itemQuantity");
 
     //INSERER L'ELEMENT 'DIV'
     let productItemContentSettingsDelete = document.createElement("div");
@@ -101,7 +101,5 @@ for (let productKey in productLocalStorage) {
 
   }) 
  
-  
 }
-
 
