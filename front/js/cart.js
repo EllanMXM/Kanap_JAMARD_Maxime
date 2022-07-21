@@ -2,7 +2,6 @@
 let productLocalStorage = getCart();
 //let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 
-
 for (let productKey in productLocalStorage) {
   const product = productLocalStorage[productKey];
 
@@ -80,10 +79,11 @@ for (let productKey in productLocalStorage) {
     productItemContentSettingsQuantity.appendChild(productQuantity);
     productQuantity.className = "itemQuantity";
     productQuantity.value = product.quantity;
-    productQuantity.type = ("number");
+    productQuantity.defaultValue = product.quantity;
+    productQuantity.type = "number";
     productQuantity.min = 1;
     productQuantity.max = 100;
-    productQuantity.name = ("itemQuantity");
+    productQuantity.name = "itemQuantity";
 
     //INSERER L'ELEMENT 'DIV'
     let productItemContentSettingsDelete = document.createElement("div");
@@ -96,10 +96,51 @@ for (let productKey in productLocalStorage) {
     productItemContentSettingsDelete.appendChild(productSupprimer);
     productSupprimer.className = "deleteItem";
     productSupprimer.textContent = "Supprimer";
+
+    let addedArticle = {
+      name: product.name,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price
+    }
+
+    //MODIFIER QUANTITÉ
+    productQuantity.addEventListener("change", (event) => {
+
+      if (productQuantity.value > 0 && productQuantity.value <= 100) {
+        productLocalStorage[productKey].quantity = productQuantity.value;
+        //METTRE A JOUR LA VALEUR PAR DEFAUT DE L'INPUT 
+        productQuantity.defaultValue = productQuantity.value;
+
+        localStorage.setItem("cart", JSON.stringify(productLocalStorage));
+      } else {
+        // REINITIALISER LA QUANTITE A LA VALEUR PAR DEFAUT
+
+        alert("Nombre d'articles incorrect")
+        productQuantity.value = productQuantity.defaultValue;
+      }
+    }); 
+
+    //SUPPRIMER UN OBJET
+    productSupprimer.addEventListener('click', (event) => {
+      //Supprimer le produit de l'affichage
+      //Il faut aussi supprimer la référence du produit dans l'objet panier stocké dans le localStorage
+    });
+
   })
   .catch(error => {
-
-  }) 
- 
+    alert("Erreur lors de l'appel du serveur ");
+  })    
 }
+
+
+ //affichage du prix total
+
+  //let totalPrice = document.querySelector("#totalPrice")
+  //let total = item.price * item.quantity;
+     
+
+
+
+
 
