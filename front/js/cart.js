@@ -144,4 +144,40 @@ for (let productKey in productLocalStorage) {
   .catch(error => {
     alert("Erreur lors de l'appel du serveur ");
   })    
-};
+}
+
+ //affichage du prix total
+
+//FORMULAIRE
+let buttonOrder = document.getElementById('order')
+buttonOrder.addEventListener('click', (even) => {
+  
+  let firstName = document.getElementById('firstName');
+  let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+  firstNameErrorMsg.innerText = 'Merci de bien vouloir saisir un Prénom valide'
+  let firstNameRegExp = /^[a-zA-Zç=e=-]$/;
+
+  let lastName = document.getElementById("lastName");
+  let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+  lastNameErrorMsg.innerText = 'Merci de bien vouloir saisir un Nom valide'
+  let lastNameRegExp = /^[a-zA-Zç=e=-]$/;
+  //code postal exemple : /^[0-9][0-9][0-9][0-9][0-9]$/ ou mieux /^[0-9-]{5}$/
+
+  let address = document.getElementById("address");
+  let addressErrorMsg = document.getElementById("addressErrorMsg");
+  addressErrorMsg.innerText = 'Merci de bien vouloir saisir une Adresse valide'
+  //let addressRegExp = /[a-zA-Zéèàç0-9]/;
+
+
+  let city = document.getElementById("city");
+  let cityErrorMsg = document.getElementById("cityErrorMsg")
+  cityErrorMsg.innerText = 'Merci de bien vouloir saisir une Ville valide'
+  //let cityRegExp = /^[a-zA-Zéèç]$/;
+
+
+  let email = document.getElementById("email");
+  let emailErrorMsg = document.getElementById("emailErrorMsg")
+  emailErrorMsg.innerText = 'Merci de bien vouloir saisir un Email valide'
+  let emailRegExp = /^[a-zA-Z0-9.-_]{1,50}[@]{1}[a-zA-Z0-9.-_]{1,50}[.]{1}[a-z]{2,10}$/
+  //let emailRegExp = /^[a-zA-Z-éèàç-0-9]$/;
+});
