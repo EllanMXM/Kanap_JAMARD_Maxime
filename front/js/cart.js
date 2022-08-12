@@ -15,11 +15,12 @@ for (let productKey in productLocalStorage) {
   
   })
   .then(data => {
+    console.log(data);
     //INSERER L'ELEMENT 'ARTICLE'
     let productArticle = document.createElement("article");
     document.querySelector("#cart__items").appendChild(productArticle);
     productArticle.className = "cart__item";
-    productArticle.dataset.id = data.id;
+    productArticle.dataset.id = data._id;
     productArticle.dataset.color = product.color;
 
     //INSERER L'ELEMENT 'DIV'
@@ -125,22 +126,22 @@ for (let productKey in productLocalStorage) {
     productSupprimer.addEventListener('click', (event) => {
       //Supprimer le produit de l'affichage
       //Il faut aussi supprimer la référence du produit dans l'objet panier stocké dans le localStorage
+       let itemIdToDelete = productArticle.dataset.id;
+       let itemColorToDelete = productArticle.dataset.color;
+
+       const productKey = itemIdToDelete + itemColorToDelete;
+
+       delete productLocalStorage[productKey];
+       localStorage.setItem("cart", JSON.stringify(productLocalStorage));
+      
+       productArticle.parentNode.removeChild(productArticle);
+       //supprimer cette clé de l'objet panier
+       //enregistrer le panier cans le localStorage
+      
     });
 
   })
   .catch(error => {
     alert("Erreur lors de l'appel du serveur ");
   })    
-}
-
-
- //affichage du prix total
-
-  //let totalPrice = document.querySelector("#totalPrice")
-  //let total = item.price * item.quantity;
-     
-
-
-
-
-
+};
