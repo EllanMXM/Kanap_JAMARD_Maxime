@@ -1,6 +1,8 @@
 // RECUPERER LES PRODUITS STOCKES DANS LE LOCALSTORAGE
 let productLocalStorage = getCart();
 //let productLocalStorage = JSON.parse(localStorage.getItem("product"));
+let totalPrice = 0;
+let totalQuantity = 0;
 
 for (let productKey in productLocalStorage) {
   const product = productLocalStorage[productKey];
@@ -16,6 +18,18 @@ for (let productKey in productLocalStorage) {
   })
   .then(data => {
     console.log(data);
+
+    //AFFICHAGE PRIX TOTAL
+    let totalQuantityElement = document.getElementById("totalQuantity");
+    let totalPriceElement = document.getElementById("totalPrice");
+
+
+    totalPrice += product.quantity * data.price;
+    totalQuantity += parseInt(product.quantity, 10);
+
+    totalPriceElement.textContent = totalPrice;
+    totalQuantityElement.textContent = totalQuantity;
+
     //INSERER L'ELEMENT 'ARTICLE'
     let productArticle = document.createElement("article");
     document.querySelector("#cart__items").appendChild(productArticle);
@@ -146,7 +160,7 @@ for (let productKey in productLocalStorage) {
   })    
 }
 
- //affichage du prix total
+
 
 //FORMULAIRE
 let buttonOrder = document.getElementById('order')
@@ -154,8 +168,14 @@ buttonOrder.addEventListener('click', (even) => {
   
   let firstName = document.getElementById('firstName');
   let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-  firstNameErrorMsg.innerText = 'Merci de bien vouloir saisir un Prénom valide'
   let firstNameRegExp = /^[a-zA-Zç=e=-]$/;
+  if (firstNameRegExp.test(firstName.value)){
+  firstNameErrorMsg.innerText = "";
+}
+else{
+  alert('Merci de bien vouloir saisir un Prénom valide')
+}
+
 
   let lastName = document.getElementById("lastName");
   let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
@@ -166,18 +186,19 @@ buttonOrder.addEventListener('click', (even) => {
   let address = document.getElementById("address");
   let addressErrorMsg = document.getElementById("addressErrorMsg");
   addressErrorMsg.innerText = 'Merci de bien vouloir saisir une Adresse valide'
-  //let addressRegExp = /[a-zA-Zéèàç0-9]/;
+  let addressRegExp = /^[a-zA-Z=e=0-9]+$/
 
 
   let city = document.getElementById("city");
   let cityErrorMsg = document.getElementById("cityErrorMsg")
   cityErrorMsg.innerText = 'Merci de bien vouloir saisir une Ville valide'
-  //let cityRegExp = /^[a-zA-Zéèç]$/;
+  let cityRegExp = /^[a-zA-Z=e=0-9]+$/
+ 
 
 
   let email = document.getElementById("email");
   let emailErrorMsg = document.getElementById("emailErrorMsg")
   emailErrorMsg.innerText = 'Merci de bien vouloir saisir un Email valide'
-  let emailRegExp = /^[a-zA-Z0-9.-_]{1,50}[@]{1}[a-zA-Z0-9.-_]{1,50}[.]{1}[a-z]{2,10}$/
-  //let emailRegExp = /^[a-zA-Z-éèàç-0-9]$/;
+  let emailRegExp = /^[a-zA-Z0-9.-_]+\@[a-zA-Z0-9.-_]+\.[a-z]{2,}$/
+ 
 });
