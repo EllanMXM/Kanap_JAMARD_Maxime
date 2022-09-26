@@ -117,96 +117,238 @@ for (let productKey in productLocalStorage) {
         description: product.description,
         imageUrl: product.imageUrl,
         price: product.price
-    }
-
-    //MODIFIER QUANTITÉ
-    productQuantity.addEventListener("change", (event) => {
-
-      if (productQuantity.value > 0 && productQuantity.value <= 100) {
-        // +2 => 2
-        // -5
-        // -5 + 10 = 5
-        // 10 + -5 = 5
-        // quantityDiff =  newArtcileQuantity - oldArticleQuantity
-        // totalQuantity = totalQuantity + quantityDiff
-        let quantityDiff = productQuantity.value - productQuantity.defaultValue;
-        totalQuantityElement.textContent = parseInt(totalQuantityElement.textContent, 10) + quantityDiff;
-
-        totalPriceElement.textContent = parseInt(totalPriceElement.textContent, 10) + quantityDiff * data.price;
-        productLocalStorage[productKey].quantity = productQuantity.value;
-        //METTRE A JOUR LA VALEUR PAR DEFAUT DE L'INPUT 
-        productQuantity.defaultValue = productQuantity.value;
-
-        localStorage.setItem("cart", JSON.stringify(productLocalStorage));
-      } else {
-        // REINITIALISER LA QUANTITE A LA VALEUR PAR DEFAUT
-
-        alert("Nombre d'articles incorrect")
-        productQuantity.value = productQuantity.defaultValue;
       }
-    }); 
 
-    //SUPPRIMER UN OBJET
-    productSupprimer.addEventListener('click', (event) => {
-      //Supprimer le produit de l'affichage
-      //Il faut aussi supprimer la référence du produit dans l'objet panier stocké dans le localStorage
-      //let itemIdToDelete = productArticle.dataset.id;
-      //let itemColorToDelete = productArticle.dataset.color;
+      //MODIFIER QUANTITÉ
+      productQuantity.addEventListener("change", (event) => {
 
-      //const productKey = itemIdToDelete + itemColorToDelete;
-      
-      // prix total post suppression = prix total - quantité produit * prix unitaire produit
-      totalPriceElement.textContent = totalPriceElement.textContent - productQuantity.value * data.price;
-      
-      totalQuantityElement.textContent = totalQuantityElement.textContent - productQuantity.value;
-      
-      delete productLocalStorage[productKey];
-      localStorage.setItem("cart", JSON.stringify(productLocalStorage));
-      
-      productArticle.parentNode.removeChild(productArticle);
-    });
+        if (productQuantity.value > 0 && productQuantity.value <= 100) {
+          // +2 => 2
+          // -5
+          // -5 + 10 = 5
+          // 10 + -5 = 5
+          // quantityDiff =  newArtcileQuantity - oldArticleQuantity
+          // totalQuantity = totalQuantity + quantityDiff
+          let quantityDiff = productQuantity.value - productQuantity.defaultValue;
+          totalQuantityElement.textContent = parseInt(totalQuantityElement.textContent, 10) + quantityDiff;
+
+          totalPriceElement.textContent = parseInt(totalPriceElement.textContent, 10) + quantityDiff * data.price;
+          productLocalStorage[productKey].quantity = productQuantity.value;
+          //METTRE A JOUR LA VALEUR PAR DEFAUT DE L'INPUT 
+          productQuantity.defaultValue = productQuantity.value;
+
+          localStorage.setItem("cart", JSON.stringify(productLocalStorage));
+        } else {
+          // REINITIALISER LA QUANTITE A LA VALEUR PAR DEFAUT
+
+          alert("Nombre d'articles incorrect")
+          productQuantity.value = productQuantity.defaultValue;
+        }
+      }); 
+
+      //SUPPRIMER UN OBJET
+      productSupprimer.addEventListener('click', (event) => {
+        //Supprimer le produit de l'affichage
+        //Il faut aussi supprimer la référence du produit dans l'objet panier stocké dans le localStorage
+        //let itemIdToDelete = productArticle.dataset.id;
+        //let itemColorToDelete = productArticle.dataset.color;
+
+        //const productKey = itemIdToDelete + itemColorToDelete;
+        
+        // prix total post suppression = prix total - quantité produit * prix unitaire produit
+        totalPriceElement.textContent = totalPriceElement.textContent - productQuantity.value * data.price;
+        
+        totalQuantityElement.textContent = totalQuantityElement.textContent - productQuantity.value;
+        
+        delete productLocalStorage[productKey];
+        localStorage.setItem("cart", JSON.stringify(productLocalStorage));
+        
+        productArticle.parentNode.removeChild(productArticle);
+      });
 
     })
   .catch(error => {
     alert("Erreur lors de l'appel du serveur ");
-  })    
+    })    
 }
 
 
-
 //FORMULAIRE
-let buttonOrder = document.getElementById('order')
-buttonOrder.addEventListener('click', (even) => {
-  
-  let firstName = document.getElementById('firstName');
-  let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-  let firstNameRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]$/;
-  
-  if (firstNameRegExp.test(firstName.value)){
-    firstNameErrorMsg.innerText = "";
+/*
+const inputElement = document.querySelector('input');
+
+//First Name
+
+  let inputFirstName = document.getElementById('firstName');
+
+  let checkFirstName = () => {
+      let firstName = document.getElementById('firstName').value
+      let firstNameRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]+$/;
+      let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg')
+      if (firstNameRegExp.test(firstName)) {
+          firstNameErrorMsg.textContent = ""
+          return true
+      } else {
+         firstNameErrorMsg.textContent = "Veuillez entrer un prénom valide"
+          return false
+      }
   }
-  else{
-    alert('Merci de bien vouloir saisir un Prénom valide')
+  
+
+
+  // Last Name
+
+  let inputLastName = document.getElementById('lastName');
+
+    let checkLastName = () => {
+    let lastName = document.getElementById('lastName').value
+    let lastNameRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]+$/;
+    let lastNameErrorMsg = document.querySelector('#lastNameErrorMsg')
+    if (lastNameRegExp.test(lastName)) {
+      lastNameErrorMsg.textContent = ""
+        return true
+    } else {
+      lastNameErrorMsg.textContent = "Veuillez entrer un nom valide"
+        return false
+    }
+}
+
+
+    
+  // Adress
+
+  let inputAddress = document.getElementById('address');
+
+  let checkAddress = () => {
+    let address = document.getElementById('address').value
+    let addressRegExp = /^[a-zA-Z0-9àâäëéèêïîôöùûç, -]+$/;
+    let addressErrorMsg = document.querySelector('#addressErrorMsg')
+    if (addressRegExp.test(address)) {
+      addressErrorMsg.textContent = ""
+        return true
+    } else {
+      addressErrorMsg.textContent = "Veuillez entrer une adresse valide"
+        return false
+    }
   }
 
-  let lastName = document.getElementById("lastName");
-  let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-  lastNameErrorMsg.innerText = 'Merci de bien vouloir saisir un Nom valide'
-  let lastNameRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]$/;
 
-  let address = document.getElementById("address");
-  let addressErrorMsg = document.getElementById("addressErrorMsg");
-  addressErrorMsg.innerText = 'Merci de bien vouloir saisir une Adresse valide'
-  let addressRegExp = /^[a-zA-Z0-9àâäëéèêïîôöùûç, -]+$/
 
-  let city = document.getElementById("city");
-  let cityErrorMsg = document.getElementById("cityErrorMsg")
-  cityErrorMsg.innerText = 'Merci de bien vouloir saisir une Ville valide'
-  let cityRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]+$/
+ // City 
 
-  let email = document.getElementById("email");
-  let emailErrorMsg = document.getElementById("emailErrorMsg")
-  emailErrorMsg.innerText = 'Merci de bien vouloir saisir un Email valide'
-  let emailRegExp = /^[a-zA-Z0-9.-_]+\@[a-zA-Z0-9.-_]+\.[a-z]{2,10}$/
- 
+ let inputCity = document.getElementById('city');
+
+let checkCity = () => {
+    let city = document.getElementById('city').value
+    let cityRegExp = /^[a-zA-Zàâäëéèêïîôöùûç -]+$/
+    let cityErrorMsg = document.querySelector('#cityErrorMsg')
+    if (cityRegExp.test(city)) {
+      cityErrorMsg.textContent = ""
+        return true
+    } else {
+      cityErrorMsg.textContent = "Veuillez entrer un nom de ville valide"
+        return false
+    }
+};
+
+
+// Email
+
+let inputEmail = document.getElementById('email');
+
+let checkEmail = () => {
+    let email = inputEmail.value
+    let emailRegExp = /^[a-zA-Z0-9.-_]+\@[a-zA-Z0-9.-_]+\.[a-z]{2,10}$/
+    let emailErrorMsg = document.querySelector('#emailErrorMsg')
+    if (emailRegExp.test(email)) {
+      emailErrorMsg.textContent = ""
+        return true
+    } else {
+      emailErrorMsg.textContent = "Veuillez entrer un email valide"
+        return false
+    }
+}
+
+let checkForm = () => {
+if ((firstName.value) && (lastName.value) && (address.value) && (city.value) && (email.value)) {
+  return true;
+} else {
+   alert("Veuillez remplir le formulaire")
+   return false;
+}};*/
+/*
+const isInputValid = function (inputElement, regExp, errorMessage) {
+
+}
+function isInputValid(inputElement, regExp, errorMessage) {
+
+}
+*/
+const isInputValid = (inputElement, regExp, errorMessage) => {
+  if (regExp.test(inputElement.value)) {
+    inputElement.nextSibling.textContent = "";
+
+    return true;
+  } else {
+    inputElement.nextSibling.textContent = errorMessage;
+
+    return false;
+  }
+};
+
+
+// Button 
+  
+let buttonOrder = document.querySelector('#order')
+document.querySelector('#order').addEventListener('click', (even) => {
+  even.preventDefault();
+  
+  let isFormValid = isInputValid(document.getElementById('firstName'),
+  /^[a-zA-Zàâäëéèêïîôöùûç -]+$/, 
+  "Veuillez entrer un prénom valide");
+  
+  isFormValid = isInputValid(document.getElementById('lastName'),
+   /^[a-zA-Zàâäëéèêïîôöùûç -]+$/,
+   "Veuillez entrer un nom valide"
+  ) && isFormValid;
+
+  isFormValid = isInputValid(document.getElementById('address'),
+    /^[a-zA-Z0-9àâäëéèêïîôöùûç, -]+$/,
+    "Veuillez entrer une adresse valide",
+  ) && isFormValid
+
+  isFormValid = isInputValid(document.getElementById('city'),
+    /^[a-zA-Zàâäëéèêïîôöùûç -]+$/,
+    "Veuillez entrer un nom de ville valide",
+  ) && isFormValid
+
+
+  isFormValid = isInputValid(
+    document.getElementById('email'), 
+    /^[a-zA-Z0-9.-_]+\@[a-zA-Z0-9.-_]+\.[a-z]{2,10}$/, 
+    "Veuillez entrer un email valide"
+  ) && isFormValid;
+/*
+  Si le formulaire est valide alors
+    on envoie la commande
+
+  * Un formulaire est valide si tous ses input sont valides
+  *//*
+  let isFormValid = checkFirstName();
+  isFormValid = checkLastName() && isFormValid;
+  isFormValid = checkAddress() && isFormValid;
+  isFormValid = checkCity() && isFormValid;
+  isFormValid = checkEmail() && isFormValid;*/
+/*
+  let isFormValid = isInputValid(elementPRenom, regexpPrenom, 'message derreur du prenom');
+  isFormValid = isInputValid(elementNom, regexpNom, 'Message derreur du nom') && isFormValid;
+  isFormValid = isInputValid() && isFormValid;
+  isFormValid = isInputValid() && isFormValid;
+  isFormValid = isInputValid() && isFormValid;
+*/
+  //if (checkFirstName() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
+  if (isFormValid) { 
+    // On consomme l'API pour créer la commande
+  }
+
 });
