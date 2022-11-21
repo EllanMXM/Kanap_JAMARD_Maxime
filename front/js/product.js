@@ -1,5 +1,6 @@
-//allez chercher les paramètre dans l'url
+//ALLER CHERCHER LES PARAMÈTRES DANS L'URL AVEC NEW URLSearchParams  
 let urlparam = new URLSearchParams(window.location.search);
+//RECUPERER L'ID DU PRODUIT AVEC URLPARAM.GET
 let idProduct = urlparam.get("id");
 
 //APPEL API POUR UN SEUL PRODUIT (idProduct)
@@ -9,6 +10,10 @@ fetch("http://localhost:3000/api/products/" + idProduct)
     return response.json();
   }
 
+  if (response.status == 404) {
+    throw new Error('Le produit n\'existe pas');
+  }
+  
   throw new Error('Réponse inattendue du serveur');
 })
 .then(data => {
@@ -17,7 +22,7 @@ fetch("http://localhost:3000/api/products/" + idProduct)
   img.src = data.imageUrl;
   img.alt = data.altTxt;
 
-  //Ajout des élements des produits
+  //AJOUT DES ELEMENTS DES PRODUITS
   let title = document.getElementById("title");
   title.textContent = data.name;
 
@@ -27,7 +32,7 @@ fetch("http://localhost:3000/api/products/" + idProduct)
   let description = document.getElementById("description");
   description.textContent = data.description;
 
-  //Ajout des couleurs
+  //AJOUT DES COULEURS
   for (let color of data.colors) {
     let optionTag = document.createElement("option");
     document.getElementById("colors").appendChild(optionTag);
@@ -50,10 +55,8 @@ fetch("http://localhost:3000/api/products/" + idProduct)
         
     if (choixCouleur == "") {
       alert("Veuillez sélectionner une couleur.");
-      return;
     } else if (choixQuantite <= 0 || choixQuantite >= 100) {
-      alert("Nombre d'articles incorrect.");
-      return;
+      alert("Veuillez choisir une quantité entre 1 et 100.");
     } 
     else {
       let addedArticle = {
@@ -64,49 +67,32 @@ fetch("http://localhost:3000/api/products/" + idProduct)
 
       let cart = getCart();
       const productKey = idProduct + selectColors.value;
-     
- /*
-      let exampleArray = ['poijfzepoiefzj', 'pojfepoezfj,', 45];console.log(exampleArray[2]);
-      let exampleObject = {
-        name:'nom',
-        quantity: 4
-      }; 
-      let targetKey = 'name';
-      exampleObject.name == exampleObject['name'] == exampleObject[targetKey]
-      {
-        'idproduit plus sa couleur' : {
-          id: 'azdjhdamzdojhia',
-          quantity: 30,
-          color: 'Red'
-        }
-      }
-      exampleObject['name'] = 'toto';
-*/
-      if (cart.hasOwnProperty(productKey)) { // Ici la clé existe, donc on modifie la quantité
-        // cart[productKey].quantity = nouvelleQuantité (addition de la quantité enregistrée avec la nouvelle quantité saisie)
-        // Attention, la quantité totale ne doit pas dépasser 100
  
+      if (cart.hasOwnProperty(productKey)) { 
+        // Ici la clé existe, donc on modifie la quantité
+        // cart[productKey].quantity = nouvelleQuantité (addition de la quantité enregistrée avec la nouvelle quantité saisie)
+        
         let newQuantity = parseInt(addedArticle.quantity) + parseInt(cart[productKey].quantity);
 
-        //if (newQuantity > 0 || newQuantity <= 100)
         if (newQuantity > 0 && newQuantity <= 100) {
           cart[productKey].quantity = newQuantity;
           
           localStorage.setItem("cart", JSON.stringify(cart));
         } else {
-          alert("Nombre maximum d'article dépassé")
-          //gérer message d'erreur, nombre maximum dépassé
+          alert("Nombre maximum d'article dépassé");
+          return;
         }
-      } else { // la clé n'existe pas donc on ajoute le produit au panier
-          //La quantité est validée plus haut, pas besoin de faire un nouveau test dans le cas d'un nouveau produit
+      } else { 
+          //LA CLE N'EXISTE PAS DONC ON AJOUTE LE PRODUIT AU PANIER
           cart[productKey] = addedArticle;
           localStorage.setItem('cart', JSON.stringify(cart));
       }
-  }})
+      alert('Votre produit a bien été ajouté au panier !');
+    }
+  });
 })
 
 .catch(error => {
-  // traiter l'erreur
-  console.log(error);
-});
+  alert(error.message);
+});  
 
