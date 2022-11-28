@@ -1,9 +1,16 @@
+//APPEL FETCH - REPONSE EN JSON 
 fetch("http://localhost:3000/api/products")
-  .then((response) => response.json())
+  .then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+  
+    throw new Error('Réponse inattendue du serveur');
+  })
   .then((data) =>
-    //traiter les données de la réponse
+    //TRAITER LES DONNÉES DE LA REPONSE 
     data.forEach((product) => {
-      //let data = document.createElement;
+      //CREATION DES BALISES
       const productsContainer = document.getElementById("items");
       const productlink = document.createElement("a");
       const articleTag = document.createElement("article");
@@ -11,6 +18,7 @@ fetch("http://localhost:3000/api/products")
       const titleTag = document.createElement("h3");
       const productDescription = document.createElement("p");
 
+      //INSERER LES ELEMENTS DES BALISES
       imageTag.src = product.imageUrl;
       imageTag.alt = product.altTxt;
       titleTag.classList.add("productName");
@@ -24,21 +32,11 @@ fetch("http://localhost:3000/api/products")
       articleTag.append(productDescription);
       productsContainer.append(productlink);
 
-      //Création d'une balise img
-      //Création d'une balise H3
-      //Creation d'une balise p
-      //Chaque balise créée doit contenir les informations de l'objet product
-      /*
-      Créer les différents élément HTML permettant l'affichage d'un canapé
-      Se référer au template index.html 
-      */
       productlink.href = "./product.html?id=" + product["_id"];
 
-      console.log(product);
     })
   )
-  .catch((error) => {
-    console.log(error);
-    //créer une erreur dans le cas contraire
-    //gestion de l'erreur
-  });
+  //COMPORTEMENT EN CAS D'ÉCHEC DE LA REQUÊTE
+  .catch(error => {
+    alert("Erreur lors de l'appel du serveur ");
+  });  
