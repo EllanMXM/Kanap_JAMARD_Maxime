@@ -1,4 +1,4 @@
-//ALLER CHERCHER LES PARAMÈTRES DANS L'URL AVEC NEW URLSearchParams  
+//ALLER CHERCHER LES PARAMÈTRES DANS L'URL AVEC NEW URLSearchParams 
 let urlparam = new URLSearchParams(window.location.search);
 //RECUPERER L'ID DU PRODUIT AVEC URLPARAM.GET
 let idProduct = urlparam.get("id");
@@ -39,7 +39,6 @@ fetch("http://localhost:3000/api/products/" + idProduct)
     optionTag.textContent = color;
     optionTag.value = color;
   }
-  console.log(data);
 
   const addToCartButton = document.getElementById("addToCart");
   addToCartButton.addEventListener("click", (event) => {
