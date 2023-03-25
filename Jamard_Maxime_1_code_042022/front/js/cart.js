@@ -142,6 +142,10 @@ for (let productKey in productLocalStorage) {
       //SUPPRIMER UN OBJET
       productSupprimer.addEventListener('click', (event) => {
       
+        if (!confirm("Êtes-vous sûr(e) de vouloir supprimer ce produit ?")) {
+          return; 
+        }
+        
         totalPriceElement.textContent = totalPriceElement.textContent - productQuantity.value * data.price;
         
         totalQuantityElement.textContent = totalQuantityElement.textContent - productQuantity.value;
