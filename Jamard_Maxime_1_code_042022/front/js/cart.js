@@ -185,7 +185,7 @@ document.querySelector('#order').addEventListener('click', (event) => {
   }
 
   let isFormValid = isInputValid(document.getElementById('firstName'),
-  /^[a-zA-Zàâäëéèêïîôöùûç -]+$/, 
+  /^[a-zA-Zàâäëéèêïîôöùûç -]{3,}$/, 
   "Veuillez entrer un prénom valide");
   
   isFormValid = isInputValid(document.getElementById('lastName'),
